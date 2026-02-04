@@ -5,15 +5,20 @@ let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 let textoPesquisa = document.getElementById("textoPesquisa");
 let btnPesquisar = document.getElementById("btnPesquisar");
 let caixaPesquisa = document.getElementById("caixaPesquisa");
+let timeoutId;
 
 textoPesquisa.addEventListener("input", () => {
-  const filtro = textoPesquisa.value.toLowerCase();
+  clearTimeout(timeoutId);
 
-  const tarefasFiltro = tarefas.filter((tarefa) => {
-    return tarefa.tarefa.toLowerCase().includes(filtro);
-  });
+  timeoutId = setTimeout(() => {
+    const filtro = textoPesquisa.value.toLowerCase();
 
-  renderizarTarefas(tarefasFiltro);
+    const tarefasFiltro = tarefas.filter((tarefa) => {
+      return tarefa.tarefa.toLowerCase().includes(filtro);
+    });
+
+    renderizarTarefas(tarefasFiltro);
+  }, 300);
 });
 
 btnPesquisar.addEventListener("click", () => {
@@ -25,6 +30,30 @@ btnPesquisar.addEventListener("click", () => {
     textoPesquisa.value = "";
     renderizarTarefas();
   }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const logo = document.getElementById("logo-site");
+  const pesquisa = document.getElementById("caixaPesquisa");
+
+  if (window.innerWidth <= 600) {
+    pesquisa.style.display = "none";
+
+    setTimeout(() => {
+      logo.classList.add("fade-out");
+
+      setTimeout(() => {
+        logo.style.display = "none";
+        pesquisa.style.display = "flex";
+
+        setTimeout(() => {
+          pesquisa.classList.add("fade-in");
+        }, 50);
+      }, 600);
+    }, 2000);
+  }
+
+  renderizarTarefas();
 });
 
 function salvarTarefas() {
