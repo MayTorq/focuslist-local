@@ -19,9 +19,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* Diminuímos o padding da esquerda (10px) e mantemos 5% na direita */
   padding: 10px 5% 10px 10px;
-  background-color: #403d39;
+  background-color: #2d3142;
   width: 100%;
   margin: 0;
 }
@@ -35,7 +34,7 @@ h1 {
 
 .caixaPesquisa {
   margin: 0;
-  background-color: #fffcf2;
+  background-color: #4f5d75;
   padding: 5px 10px;
   border-radius: 20px;
   display: flex;
@@ -47,15 +46,23 @@ h1 {
   header {
     justify-content: center;
     position: relative;
+    min-height: 80px;
   }
 
   .espacador-vazio {
     display: none;
   }
 
-  #logo-site {
+  #logoSite {
     position: absolute;
-    width: 100%;
+    z-index: 2;
+    margin: 0;
+    background-color: #4f5d75;
+    padding: 5px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    width: fit-content;
   }
 
   .caixaPesquisa {
@@ -63,11 +70,13 @@ h1 {
     width: 90% !important;
     opacity: 0;
     display: none;
+    z-index: 1;
   }
 
   .fade-out {
     opacity: 0 !important;
     transform: translateY(-15px);
+    pointer-events: none;
   }
 
   .fade-in {
@@ -84,7 +93,6 @@ h1 {
 }
 
 .textoPesquisa {
-  background: none;
   outline: 0;
   border: 0;
   padding: 0 0 0 10px;
@@ -92,6 +100,8 @@ h1 {
   width: 200px;
   display: block;
   margin: 0%;
+  color: #ffffff;
+  background-color: #4f5d75;
 }
 
 .btnPesquisa {

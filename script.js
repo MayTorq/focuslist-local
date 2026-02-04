@@ -33,23 +33,28 @@ btnPesquisar.addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  const logo = document.getElementById("logo-site");
+  const logo = document.getElementById("logoSite");
   const pesquisa = document.getElementById("caixaPesquisa");
 
   if (window.innerWidth <= 600) {
-    pesquisa.style.display = "none";
+    if (pesquisa) {
+      pesquisa.style.display = "none";
+      pesquisa.style.opacity = "0";
+    }
 
     setTimeout(() => {
-      logo.classList.add("fade-out");
-
-      setTimeout(() => {
-        logo.style.display = "none";
-        pesquisa.style.display = "flex";
+      if (logo) {
+        logo.classList.add("fade-out");
 
         setTimeout(() => {
-          pesquisa.classList.add("fade-in");
-        }, 50);
-      }, 600);
+          logo.style.display = "none";
+          if (pesquisa) {
+            pesquisa.style.display = "flex";
+            void pesquisa.offsetWidth;
+            pesquisa.classList.add("fade-in");
+          }
+        }, 600);
+      }
     }, 2000);
   }
 
