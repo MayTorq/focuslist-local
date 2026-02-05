@@ -34,7 +34,7 @@ h1 {
 
 .caixaPesquisa {
   margin: 0;
-  background-color: #4f5d75;
+  background-color: #c3c4c6;
   padding: 5px 10px;
   border-radius: 20px;
   display: flex;
@@ -101,7 +101,7 @@ h1 {
   display: block;
   margin: 0%;
   color: #ffffff;
-  background-color: #4f5d75;
+  background-color: #c3c4c6;
 }
 
 .btnPesquisa {
@@ -111,6 +111,121 @@ h1 {
   display: flex;
   align-items: center;
   padding: 5px;
+}
+
+.filtroContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.btnFiltro {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%; /* Mantém o feedback visual circular */
+  transition: background-color 0.2s ease;
+  width: 40px; /* Tamanho fixo para garantir a área de clique */
+  height: 40px;
+}
+
+.btnFiltro:hover {
+  background-color: rgba(255, 252, 242, 0.1);
+}
+
+.btnFiltro:active {
+  background-color: rgba(255, 252, 242, 0.2);
+  transform: scale(0.95);
+}
+
+.filtro {
+  width: 40px; /* Ajuste o tamanho do ícone conforme necessário */
+  height: 40px;
+  object-fit: contain; /* Garante que a imagem não distorça */
+  display: block;
+}
+
+.menuFiltro {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: white;
+  min-width: 280px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 12px 0;
+  z-index: 1000;
+}
+
+.menuFiltro.ativo {
+  display: block;
+}
+
+.filtroSecao {
+  padding: 8px 0;
+}
+
+.filtroSecao:not(:last-child) {
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.filtroTitulo {
+  display: block;
+  padding: 0 16px 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5f6368;
+}
+
+.filtroItem {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.filtroItem:hover {
+  background-color: #f8f9fa;
+}
+
+.filtroItem input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 12px;
+}
+
+.circulo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-size: 0.9rem;
+}
+
+.iconeCirculoCinza {
+  background-color: #b8bfc7;
+}
+.iconeCirculoVermelho {
+  background-color: #d93025;
+}
+.iconeCirculoAmarelo {
+  background-color: #f9ab00;
+}
+.iconeCirculoCinzaClaro {
+  background-color: #909192;
+}
+
+.textoItem {
+  font-size: 0.9rem;
+  color: #3c4043;
 }
 
 form {

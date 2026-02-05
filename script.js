@@ -1,5 +1,7 @@
 const form = document.getElementById("formTarefas");
 const container = document.getElementById("cards");
+const btnFiltro = document.getElementById("btnFiltro");
+const menuFiltro = document.getElementById("menuFiltro");
 
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 let textoPesquisa = document.getElementById("textoPesquisa");
@@ -59,6 +61,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   renderizarTarefas();
+});
+
+btnFiltro.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menuFiltro.classList.toggle("ativo");
+});
+
+document.addEventListener("click", (e) => {
+  if (!menuFiltro.contains(e.target) && e.target !== btnFiltro) {
+    menuFiltro.classList.remove("ativo");
+  }
+});
+
+const allCheckboxes = document.querySelectorAll(
+  '.menuFiltro input[type="checkbox"]',
+);
+allCheckboxes.forEach((cb) => {
+  cb.addEventListener("change", () => {
+    console.log("Filtro alterado!");
+  });
 });
 
 function salvarTarefas() {
