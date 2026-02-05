@@ -26,7 +26,8 @@ header {
 }
 
 h1 {
-  font-family: "Lilita One", cursive;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 40px;
   color: #fffcf2;
   text-align: center;
   flex: 1;
@@ -126,9 +127,9 @@ h1 {
   align-items: center;
   justify-content: center;
   padding: 8px;
-  border-radius: 50%; /* Mantém o feedback visual circular */
+  border-radius: 50%;
   transition: background-color 0.2s ease;
-  width: 40px; /* Tamanho fixo para garantir a área de clique */
+  width: 40px;
   height: 40px;
 }
 
@@ -142,9 +143,9 @@ h1 {
 }
 
 .filtro {
-  width: 40px; /* Ajuste o tamanho do ícone conforme necessário */
+  width: 40px;
   height: 40px;
-  object-fit: contain; /* Garante que a imagem não distorça */
+  object-fit: contain;
   display: block;
 }
 
