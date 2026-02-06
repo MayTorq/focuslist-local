@@ -21,6 +21,80 @@
         <h1 id="logoSite">🗓️Focus List</h1>
         <div style="width: 240px;" class="espacador-vazio"></div>
 
+        <div class="filtroContainer">
+            <button id="btnFiltro" class="btnFiltro">
+                <img class="filtro" src="icon-filter.png" alt="Opções de filtragem">
+            </button>
+
+            <div id="menuFiltro" class="menuFiltro">
+                <div class="filtroSecao">
+                    <span class="filtroTitulo">Estado da Tarefa</span>
+                    <label class="filtroItem">
+                        <input type="checkbox" name="status" value="concluido">
+                        <span class="textoItem">Marcado como concluído</span>
+                    </label>
+                    <label class="filtroItem">
+                        <input type="checkbox" name="status" value="pendente">
+                        <span class="textoItem">Em andamento</span>
+                    </label>
+                </div>
+
+                <div class="filtroSecao">
+                    <span class="filtroTitulo">Data de entrega</span>
+
+                    <label class="filtroItem">
+                        <input type="checkbox" name="data" value="sem-data">
+                        <div class="iconeCirculoCinza circulo"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                height="16" fill="currentColor" class="bi bi-calendar-x" viewBox="0 0 16 16">
+                                <path
+                                    d="M6.146 7.146a.5.5 0 0 1 .708 0L8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 0 1 0-.708" />
+                                <path
+                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                            </svg></i></div>
+                        <span class="textoItem">Sem datas</span>
+                    </label>
+
+                    <label class="filtroItem">
+                        <input type="checkbox" name="data" value="atraso">
+                        <div class="iconeCirculoVermelho circulo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-exclamation-diamond" viewBox="0 0 16 16">
+                                <path
+                                    d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.48 1.48 0 0 1 0-2.098zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z" />
+                                <path
+                                    d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                            </svg>
+                        </div>
+                        <span class="textoItem">Em Atraso</span>
+                    </label>
+
+                    <label class="filtroItem">
+                        <input type="checkbox" name="data" value="um-dia">
+                        <div class="iconeCirculoAmarelo circulo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-1-circle" viewBox="0 0 16 16">
+                                <path
+                                    d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z" />
+                            </svg>
+                        </div>
+                        <span class="textoItem">A ser entregue em um dia</span>
+                    </label>
+
+                    <label class="filtroItem">
+                        <input type="checkbox" name="data" value="uma-semana">
+                        <div class="iconeCirculoCinzaClaro circulo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-calendar" viewBox="0 0 16 16">
+                                <path
+                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                            </svg>
+                        </div>
+                        <span class="textoItem">A ser entregue em um mês</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
     </header>
 
     </div>

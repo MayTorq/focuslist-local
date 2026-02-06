@@ -19,15 +19,15 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* Diminuímos o padding da esquerda (10px) e mantemos 5% na direita */
   padding: 10px 5% 10px 10px;
-  background-color: #403d39;
+  background-color: #2d3142;
   width: 100%;
   margin: 0;
 }
 
 h1 {
-  font-family: "Lilita One", cursive;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 40px;
   color: #fffcf2;
   text-align: center;
   flex: 1;
@@ -35,7 +35,7 @@ h1 {
 
 .caixaPesquisa {
   margin: 0;
-  background-color: #fffcf2;
+  background-color: #c3c4c6;
   padding: 5px 10px;
   border-radius: 20px;
   display: flex;
@@ -47,15 +47,23 @@ h1 {
   header {
     justify-content: center;
     position: relative;
+    min-height: 80px;
   }
 
   .espacador-vazio {
     display: none;
   }
 
-  #logo-site {
+  #logoSite {
     position: absolute;
-    width: 100%;
+    z-index: 2;
+    margin: 0;
+    background-color: #4f5d75;
+    padding: 5px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    width: fit-content;
   }
 
   .caixaPesquisa {
@@ -63,11 +71,13 @@ h1 {
     width: 90% !important;
     opacity: 0;
     display: none;
+    z-index: 1;
   }
 
   .fade-out {
     opacity: 0 !important;
     transform: translateY(-15px);
+    pointer-events: none;
   }
 
   .fade-in {
@@ -84,7 +94,6 @@ h1 {
 }
 
 .textoPesquisa {
-  background: none;
   outline: 0;
   border: 0;
   padding: 0 0 0 10px;
@@ -92,6 +101,8 @@ h1 {
   width: 200px;
   display: block;
   margin: 0%;
+  color: #ffffff;
+  background-color: #c3c4c6;
 }
 
 .btnPesquisa {
@@ -101,6 +112,121 @@ h1 {
   display: flex;
   align-items: center;
   padding: 5px;
+}
+
+.filtroContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.btnFiltro {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  width: 40px;
+  height: 40px;
+}
+
+.btnFiltro:hover {
+  background-color: rgba(255, 252, 242, 0.1);
+}
+
+.btnFiltro:active {
+  background-color: rgba(255, 252, 242, 0.2);
+  transform: scale(0.95);
+}
+
+.filtro {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
+}
+
+.menuFiltro {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: white;
+  min-width: 280px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 12px 0;
+  z-index: 1000;
+}
+
+.menuFiltro.ativo {
+  display: block;
+}
+
+.filtroSecao {
+  padding: 8px 0;
+}
+
+.filtroSecao:not(:last-child) {
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.filtroTitulo {
+  display: block;
+  padding: 0 16px 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5f6368;
+}
+
+.filtroItem {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.filtroItem:hover {
+  background-color: #f8f9fa;
+}
+
+.filtroItem input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 12px;
+}
+
+.circulo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-size: 0.9rem;
+}
+
+.iconeCirculoCinza {
+  background-color: #b8bfc7;
+}
+.iconeCirculoVermelho {
+  background-color: #d93025;
+}
+.iconeCirculoAmarelo {
+  background-color: #f9ab00;
+}
+.iconeCirculoCinzaClaro {
+  background-color: #909192;
+}
+
+.textoItem {
+  font-size: 0.9rem;
+  color: #3c4043;
 }
 
 form {
