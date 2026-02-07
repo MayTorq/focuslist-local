@@ -5,17 +5,20 @@ Gerenciador de tarefas pessoal desenvolvido para o curso **Técnico em Desenvolv
 > **Status do Projeto:** 🛠️ Em desenvolvimento
 
 ## 🔗 Acesse o projeto
+
 > **Acesse o projeto em tempo real:** > 👉 [https://maytorq.github.io/focuslist-local/]
 
-## 📋 Funcionalidades 
+## 📋 Funcionalidades
+
 - [x] Adicionar tarefas.
 - [x] Visualiza tarefas salvas.
 - [x] Excluir tarefas.
+- [x] Filtrar por categorias.
 - [ ] Marcar como concluído. (Em breve).
-- [ ] Filtrar por categorias (Em breve).
 - [ ] Alerta visual de prioridade (Em breve).
 
 ## 🛠️ Tecnologias
+
 - HTML5
 - CSS3 (Flexbox/Grid)
 - JavaScript (Vanilla)
@@ -31,12 +34,18 @@ Gerenciador de tarefas pessoal desenvolvido para o curso **Técnico em Desenvolv
 Para testar localmente, siga os passos abaixo:
 
 1. **Clone o repositório:**
+
    ```bash
    git clone [https://github.com/MayTorq/focuslist-local.git](https://github.com/MayTorq/focuslist-local.git)
 
+   ```
+
 2. **Acesse a pasta:**
+
    ```bash
    cd focuslist-local
 
+   ```
+
 3. **Execução:**
-    Abra o arquivo index.html no seu navegador ou utilize a extensão **Live Server** no VS Code para uma melhor experiência.
+   Abra o arquivo index.html no seu navegador ou utilize a extensão **Live Server** no VS Code para uma melhor experiência.
