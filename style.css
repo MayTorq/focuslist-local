@@ -5,24 +5,52 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
   padding: 0;
   text-align: center;
   background-color: #ff8787;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 5% 10px 10px;
+  padding: 10px 10px;
   background-color: #2d3142;
   width: 100%;
+  position: relative;
+  min-height: 80px;
   margin: 0;
+}
+
+.espacadorVazio {
+  width: 280px;
+  height: 1px;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 h1 {
@@ -33,6 +61,12 @@ h1 {
   flex: 1;
 }
 
+#logoSite {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .caixaPesquisa {
   margin: 0;
   background-color: #c3c4c6;
@@ -41,49 +75,186 @@ h1 {
   display: flex;
   align-items: center;
   width: fit-content;
+  height: 40px;
 }
 
 @media (max-width: 600px) {
   header {
     justify-content: center;
     position: relative;
-    min-height: 80px;
+    min-height: 60px;
+    padding: 6px 4px;
+    align-items: center;
+    overflow: hidden;
   }
 
-  .espacador-vazio {
+  .espacadorVazio {
     display: none;
   }
 
   #logoSite {
-    position: absolute;
+    position: static;
     z-index: 2;
     margin: 0;
-    background-color: #4f5d75;
-    padding: 5px 10px;
-    border-radius: 20px;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
     display: flex;
     align-items: center;
-    width: fit-content;
+    width: auto;
+    font-size: 20px;
+    flex: 1;
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #logoSite.fade-out {
+    opacity: 0 !important;
+    transform: translateY(-20px) !important;
+    pointer-events: none !important;
+    position: absolute !important;
+  }
+
+  .filtroContainer {
+    display: none;
+    gap: 8px;
+    align-items: center;
+    z-index: 3;
+  }
+
+  .filtroContainer.fade-in {
+    display: flex !important;
+    animation: fadeInScale 0.2s ease forwards;
+  }
+
+  .filtroContainer.fade-out {
+    opacity: 0 !important;
+    transform: translateY(-10px) !important;
+    pointer-events: none !important;
+    display: none !important;
   }
 
   .caixaPesquisa {
-    position: absolute;
-    width: 90% !important;
-    opacity: 0;
-    display: none;
-    z-index: 1;
+    display: none !important;
+    width: auto;
+    z-index: 3;
+  }
+
+  .caixaPesquisa.fade-in {
+    display: flex !important;
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 0;
+    align-items: center;
+    justify-content: space-between;
+    animation: fadeInScale 0.2s ease forwards;
+    background-color: #c3c4c6;
+    padding: 4px 6px;
+    border-radius: 20px;
+    height: auto;
+  }
+
+  header.search-active {
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  header.search-active .filtroContainer {
+    display: flex !important;
+    flex-shrink: 0;
+  }
+
+  header.search-active .caixaPesquisa {
+    display: flex !important;
+  }
+
+  header:not(.search-active) .filtroContainer {
+    display: none !important;
+  }
+
+  header:not(.search-active) #logoSite {
+    margin: 0 auto;
+    flex: 0 0 auto;
+    width: auto;
+    text-align: center;
+    left: 0;
+    right: 0;
+    transform: none;
+  }
+
+  header.search-active .textoPesquisa {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  header.search-active .lupa {
+    margin: 0;
+    padding: 0;
+  }
+
+  header.search-active .btnPesquisar {
+    padding: 0;
+    margin: 0;
+  }
+
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .caixaPesquisa {
+    display: none !important;
+    width: 100% !important;
+    z-index: 3;
+  }
+
+  .caixaPesquisa.fade-in {
+    display: flex !important;
+    animation: fadeInScale 0.6s ease forwards;
+    background-color: #c3c4c6;
+    padding: 6px 8px;
+    border-radius: 20px;
+    height: auto;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1 1 auto;
   }
 
   .fade-out {
     opacity: 0 !important;
-    transform: translateY(-15px);
-    pointer-events: none;
+    transform: translateY(-15px) !important;
+    pointer-events: none !important;
   }
 
   .fade-in {
     display: flex !important;
     opacity: 1 !important;
     transform: translateY(0) !important;
+  }
+}
+
+@media (max-width: 359px) {
+  header {
+    padding: 4px !important;
+  }
+
+  .caixaPesquisa.fade-in {
+    padding: 2px 4px !important;
+  }
+
+  header.search-active {
+    gap: 2px !important;
   }
 }
 
@@ -105,18 +276,30 @@ h1 {
   background-color: #c3c4c6;
 }
 
-.btnPesquisa {
+.btnPesquisar {
   background: none;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   padding: 5px;
+  transition: opacity 0.2s;
+}
+
+.btnPesquisar:hover {
+  opacity: 0.8;
+}
+
+.btnPesquisar:focus-visible {
+  outline: 2px solid #4f5d75;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .filtroContainer {
   position: relative;
   display: inline-block;
+  margin-left: auto;
 }
 
 .btnFiltro {
@@ -135,6 +318,11 @@ h1 {
 
 .btnFiltro:hover {
   background-color: rgba(255, 252, 242, 0.1);
+}
+
+.btnFiltro:focus-visible {
+  outline: 2px solid rgba(255, 252, 242, 0.8);
+  outline-offset: 2px;
 }
 
 .btnFiltro:active {
@@ -198,6 +386,13 @@ h1 {
   width: 18px;
   height: 18px;
   margin-right: 12px;
+  cursor: pointer;
+  accent-color: #4f5d75;
+}
+
+.filtroItem input[type="checkbox"]:focus-visible {
+  outline: 2px solid #4f5d75;
+  outline-offset: 2px;
 }
 
 .circulo {
@@ -238,10 +433,26 @@ input {
   margin: 10px 0;
   width: 100%;
   max-width: 300px;
-  padding: 10px;
+  padding: 12px;
   background-color: #ffffff;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   border-radius: 8px;
+  font-size: 16px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4f5d75;
+  box-shadow: 0 0 0 3px rgba(79, 93, 117, 0.1);
+}
+
+input:focus-visible {
+  outline: none;
+  border-color: #4f5d75;
+  box-shadow: 0 0 0 3px rgba(79, 93, 117, 0.1);
 }
 
 button {
@@ -251,11 +462,29 @@ button {
   border-radius: 8px;
   background-color: #e9ecef;
   cursor: pointer;
-  transition: background 0.3s;
+  transition:
+    background-color 0.3s,
+    box-shadow 0.2s;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 button:hover {
   background-color: #dee2e6;
+}
+
+button:focus {
+  outline: 2px solid #4f5d75;
+  outline-offset: 2px;
+}
+
+button:focus-visible {
+  outline: 2px solid #4f5d75;
+  outline-offset: 2px;
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 .cardsContainer {
@@ -274,12 +503,55 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: 1px solid #121212;
+  border: 2px solid #121212;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
-#mensagem {
+.card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.card:focus-within {
+  outline: 2px solid #4f5d75;
+  outline-offset: 2px;
+}
+
+.card p {
+  flex: 1;
+  text-align: left;
+  word-break: break-word;
+}
+
+.tarefasSection {
+  width: 100%;
+  padding: 20px;
+}
+
+.mensagem {
   color: #131313;
   margin-top: 15px;
-  font-weight: bold;
+  font-weight: 600;
+  min-height: 24px;
+  transition: opacity 0.3s;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (min-width: 400px) {
+  .formGroup {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .formGroup input {
+    margin: 0;
+  }
 }
