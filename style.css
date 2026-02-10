@@ -85,7 +85,7 @@ h1 {
     min-height: 60px;
     padding: 6px 4px;
     align-items: center;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .espacadorVazio {
@@ -341,17 +341,19 @@ h1 {
   display: none;
   position: absolute;
   top: 40px;
-  right: 0;
+  right: auto;
+  left: 0;
   background-color: white;
   min-width: 280px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: 12px 0;
-  z-index: 1000;
 }
 
 .menuFiltro.ativo {
   display: block;
+  position: absolute;
+  z-index: 1000;
 }
 
 .filtroSecao {
