@@ -12,36 +12,34 @@
 <body>
     <header role="banner">
         <div class="espacadorVazio" aria-hidden="true"></div>
-
         <h1 id="logoSite">🗓️ Focus List</h1>
 
         <div class="filtroContainer">
             <button id="btnFiltro" class="btnFiltro" aria-label="Abrir menu de filtros" aria-expanded="false"
                 aria-controls="menuFiltro">
-                <img class="filtro" src="icon-filter.png" alt="Ícone de filtro">
+                <img class="iconeFiltro" src="icon-filter.png" alt="Ícone de filtro">
             </button>
 
             <nav id="menuFiltro" class="menuFiltro" role="menu" aria-label="Menu de filtros de tarefas">
-                <fieldset class="filtroSecao">
-                    <legend class="filtroTitulo">Estado da Tarefa</legend>
-                    <label class="filtroItem">
+                <div class="secaoFiltro">
+                    <span class="tituloFiltro">Estado da Tarefa</span>
+                    <label class="itemFiltro">
                         <input type="checkbox" name="status" value="concluido" aria-label="Filtrar tarefas concluídas">
                         <span class="textoItem">Marcado como concluído</span>
                     </label>
-                    <label class="filtroItem">
+                    <label class="itemFiltro">
                         <input type="checkbox" name="status" value="pendente" aria-label="Filtrar tarefas em andamento">
                         <span class="textoItem">Em andamento</span>
                     </label>
-                </fieldset>
+                </div>
 
-                <fieldset class="filtroSecao">
-                    <legend class="filtroTitulo">Data de entrega</legend>
+                <div class="secaoFiltro">
+                    <span class="tituloFiltro">Data de entrega</span>
 
-                    <label class="filtroItem">
+                    <label class="itemFiltro">
                         <input type="checkbox" name="data" value="sem-data" aria-label="Filtrar tarefas sem datas">
-                        <div class="iconeCirculoCinza circulo" aria-hidden="true"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-calendar-x" viewBox="0 0 16 16">
+                        <div class="icon iconCinza" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path
                                     d="M6.146 7.146a.5.5 0 0 1 .708 0L8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 0 1 0-.708" />
                                 <path
@@ -50,9 +48,9 @@
                         <span class="textoItem">Sem datas</span>
                     </label>
 
-                    <label class="filtroItem">
+                    <label class="itemFiltro">
                         <input type="checkbox" name="data" value="atraso" aria-label="Filtrar tarefas em atraso">
-                        <div class="iconeCirculoVermelho circulo" aria-hidden="true">
+                        <div class="icon iconVermelho" aria-hidden="true">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-exclamation-diamond" viewBox="0 0 16 16">
                                 <path
@@ -64,12 +62,12 @@
                         <span class="textoItem">Em Atraso</span>
                     </label>
 
-                    <label class="filtroItem">
+                    <label class="itemFiltro">
                         <input type="checkbox" name="data" value="um-dia"
                             aria-label="Filtrar tarefas a vencer em um dia">
-                        <div class="iconeCirculoAmarelo circulo" aria-hidden="true">
+                        <div class="icon iconAmarelo" aria-hidden="true">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-1-circle" viewBox="0 0 16 16">
+                                viewBox="0 0 16 16">
                                 <path
                                     d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z" />
                             </svg>
@@ -77,55 +75,94 @@
                         <span class="textoItem">A ser entregue em um dia</span>
                     </label>
 
-                    <label class="filtroItem">
+                    <label class="itemFiltro">
                         <input type="checkbox" name="data" value="uma-semana"
                             aria-label="Filtrar tarefas a vencer em um mês">
-                        <div class="iconeCirculoCinzaClaro circulo" aria-hidden="true">
+                        <div class="icon iconCinzaClaro" aria-hidden="true">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-calendar" viewBox="0 0 16 16">
+                                viewBox="0 0 16 16">
                                 <path
                                     d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
                             </svg>
                         </div>
                         <span class="textoItem">A ser entregue em um mês</span>
                     </label>
-                </fieldset>
+                </div>
             </nav>
         </div>
+
         <div class="caixaPesquisa" id="caixaPesquisa" role="search">
             <label for="textoPesquisa" class="sr-only">Pesquisar tarefas</label>
             <input type="text" class="textoPesquisa" id="textoPesquisa" placeholder="Pesquisar..."
                 aria-label="Campo de busca de tarefas">
             <button class="btnPesquisar" id="btnPesquisar" aria-label="Executar pesquisa">
-                <img class="lupa" src="icon-lupa.png" alt="Ícone de pesquisa">
+                <img class="iconePesquisa" src="icon-lupa.png" alt="Ícone de pesquisa">
             </button>
         </div>
-
     </header>
 
     <main>
         <section class="tarefasSection">
             <h2>Adicione suas tarefas para não se esquecer</h2>
+
+            <template id="templateCard">
+                <article class="card" role="listitem">
+                    <h3 class="tituloCard">Tarefa</h3>
+
+                    <button class="btnEditar btn-editar" aria-label="Editar tarefa">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                            <path fill-rule="evenodd"
+                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                        </svg>
+                    </button>
+
+                    <p class="descricaoCard"></p>
+                    <div class="rodapeCard">
+                        <div class="grupoBotoes">
+                            <button class="btnAcao btn-concluir" aria-label="Concluir">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486z" />
+                                </svg>
+                            </button>
+                            <button class="btnAcao btn-excluir" aria-label="Excluir">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                    <path
+                                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="dataCard"></span>
+                    </div>
+                </article>
+            </template>
+
             <form id="formTarefas" aria-label="Formulário para adicionar nova tarefa">
-                <div class="formGroup">
+                <div class="grupoFormulario">
                     <label for="tarefa" class="sr-only">Descrição da tarefa</label>
-                    <input type="text" id="tarefa" placeholder="Digite sua tarefa aqui" required aria-required="true"
-                        aria-label="Descrição da nova tarefa">
-                    <button type="submit" id="bntAdicionar" aria-label="Adicionar nova tarefa">Adicionar tarefa</button>
+                    <input type="text" id="tarefa" placeholder="Digite sua tarefa aqui" required>
+
+                    <label for="dataEntrega" class="sr-only">Data de entrega</label>
+                    <input type="date" id="dataEntrega" aria-label="Data de entrega">
+
+                    <button type="submit" id="bntAdicionar">Adicionar tarefa</button>
                 </div>
             </form>
 
             <div id="mensagem" class="mensagem" role="status" aria-live="polite" aria-atomic="true"></div>
 
-            <section class="cardsContainer" id="cards" aria-label="Lista de tarefas">
-            </section>
+            <div class="containerTarefas" id="listaTarefas" aria-label="Lista de tarefas"></div>
         </section>
     </main>
 
-
     <script src="script.js"></script>
-
-
 </body>
 
 </html>

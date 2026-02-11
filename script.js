@@ -1,5 +1,5 @@
 const form = document.getElementById("formTarefas");
-const container = document.getElementById("cards");
+const container = document.getElementById("listaTarefas");
 const btnFiltro = document.getElementById("btnFiltro");
 const menuFiltro = document.getElementById("menuFiltro");
 
@@ -9,34 +9,19 @@ let btnPesquisar = document.getElementById("btnPesquisar");
 let caixaPesquisa = document.getElementById("caixaPesquisa");
 let timeoutId;
 
+// salvando as tarefas no localStorage para não perder quando fechar
+
+// debounce na pesquisa para não ficar filtrando a cada letra digitada
 textoPesquisa.addEventListener("input", () => {
   clearTimeout(timeoutId);
 
   timeoutId = setTimeout(() => {
-    const filtro = textoPesquisa.value.trim().toLowerCase();
-
-    if (filtro === "") {
-      renderizarTarefas(tarefas);
-      return;
-    }
-
-    const tarefasFiltro = tarefas.filter((tarefa) => {
-      return tarefa.tarefa.toLowerCase().includes(filtro);
-    });
-
-    renderizarTarefas(tarefasFiltro);
+    aplicarFiltros();
   }, 300);
 });
 
 btnPesquisar.addEventListener("click", () => {
-  caixaPesquisa.classList.toggle("ativa");
-
-  if (caixaPesquisa.classList.contains("ativa")) {
-    textoPesquisa.focus();
-  } else {
-    textoPesquisa.value = "";
-    renderizarTarefas();
-  }
+  textoPesquisa.focus(); // foca no campo de pesquisa quando clica no botão
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -45,45 +30,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const filtroContainer = document.querySelector(".filtroContainer");
 
   if (window.innerWidth <= 600) {
-    // Inicialmente, mostrar logo e esconder filtro/pesquisa
-    if (logo) {
-      logo.classList.remove("fade-out");
-      logo.style.display = "flex";
-    }
+    if (logo) logo.classList.remove("desaparecer");
     if (filtroContainer) {
-      filtroContainer.classList.remove("fade-in");
-      filtroContainer.classList.remove("fade-out");
-      // manter oculto inicialmente (CSS mobile define display:none)
+      filtroContainer.classList.remove("aparecer");
+      filtroContainer.classList.remove("desaparecer");
     }
-    if (conteudoBusca) {
-      conteudoBusca.classList.remove("fade-in");
-    }
+    if (conteudoBusca) conteudoBusca.classList.remove("aparecer");
 
-    // Após 3 segundos, fazer transição
     setTimeout(() => {
-      if (logo) {
-        logo.classList.add("fade-out");
-      }
-      // ativar layout de busca no header e mostrar filtro + pesquisa
+      if (logo) logo.classList.add("desaparecer");
       const header = document.querySelector("header");
-      if (header) header.classList.add("search-active");
-
-      if (filtroContainer) {
-        filtroContainer.classList.add("fade-in");
-      }
+      if (header) header.classList.add("pesquisaAtiva");
+      if (filtroContainer) filtroContainer.classList.add("aparecer");
 
       setTimeout(() => {
         if (conteudoBusca) {
-          conteudoBusca.classList.add("fade-in");
-          // focar o campo de pesquisa ao aparecer
+          conteudoBusca.classList.add("aparecer");
           if (textoPesquisa) textoPesquisa.focus();
         }
       }, 50);
     }, 3000);
   } else {
-    logo.style.position = "static";
-    conteudoBusca.style.display = "flex";
-    conteudoBusca.style.opacity = "1";
+    if (logo) logo.style.position = "static";
+    if (conteudoBusca) {
+      conteudoBusca.style.display = "flex";
+      conteudoBusca.style.opacity = "1";
+    }
   }
 });
 
@@ -112,40 +84,127 @@ const allCheckboxes = document.querySelectorAll(
 );
 allCheckboxes.forEach((cb) => {
   cb.addEventListener("change", () => {
-    console.log("Filtro alterado!");
+    aplicarFiltros();
   });
 });
 
+function aplicarFiltros() {
+  // pegando os valores dos checkboxes de filtro
+  const statusConcluido = document.querySelector('input[value="concluido"]')?.checked || false;
+  const statusPendente = document.querySelector('input[value="pendente"]')?.checked || false;
+  const semData = document.querySelector('input[value="sem-data"]')?.checked || false;
+  const atraso = document.querySelector('input[value="atraso"]')?.checked || false;
+  const umDia = document.querySelector('input[value="um-dia"]')?.checked || false;
+  const umMes = document.querySelector('input[value="uma-semana"]')?.checked || false;
+  
+  const temFiltroStatus = statusConcluido || statusPendente;
+  const temFiltroData = semData || atraso || umDia || umMes;
+  
+  let tarefasFiltradas = [...tarefas];
+  const textoPesquisaValue = textoPesquisa.value.trim().toLowerCase();
+  
+  // se não tem filtro selecionado, só aplica pesquisa se tiver
+  if (!temFiltroStatus && !temFiltroData) {
+    if (textoPesquisaValue) {
+      tarefasFiltradas = tarefasFiltradas.filter(t => 
+        t.tarefa.toLowerCase().includes(textoPesquisaValue)
+      );
+    }
+    renderizarTarefas(tarefasFiltradas);
+    return;
+  }
+  
+  // filtrando por status
+  if (temFiltroStatus) {
+    if (statusConcluido && !statusPendente) {
+      tarefasFiltradas = tarefasFiltradas.filter(t => t.concluida);
+    } else if (statusPendente && !statusConcluido) {
+      tarefasFiltradas = tarefasFiltradas.filter(t => !t.concluida);
+    }
+  }
+  
+  // filtrando por data
+  if (temFiltroData) {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    
+    const filtrosDataAtivos = [];
+    if (semData) filtrosDataAtivos.push(t => !t.dataEntrega);
+    if (atraso) {
+      filtrosDataAtivos.push(t => {
+        if (!t.dataEntrega || t.concluida) return false;
+        const dataEntrega = new Date(t.dataEntrega);
+        dataEntrega.setHours(0, 0, 0, 0);
+        return dataEntrega < hoje;
+      });
+    }
+    if (umDia) {
+      filtrosDataAtivos.push(t => {
+        if (!t.dataEntrega || t.concluida) return false;
+        const dataEntrega = new Date(t.dataEntrega);
+        dataEntrega.setHours(0, 0, 0, 0);
+        const amanha = new Date(hoje);
+        amanha.setDate(amanha.getDate() + 1);
+        return dataEntrega.getTime() === hoje.getTime() || dataEntrega.getTime() === amanha.getTime();
+      });
+    }
+    if (umMes) {
+      filtrosDataAtivos.push(t => {
+        if (!t.dataEntrega || t.concluida) return false;
+        const dataEntrega = new Date(t.dataEntrega);
+        dataEntrega.setHours(0, 0, 0, 0);
+        const umMesFuturo = new Date(hoje);
+        umMesFuturo.setMonth(umMesFuturo.getMonth() + 1);
+        return dataEntrega >= hoje && dataEntrega <= umMesFuturo;
+      });
+    }
+    
+    tarefasFiltradas = tarefasFiltradas.filter(t => 
+      filtrosDataAtivos.some(filtro => filtro(t))
+    );
+  }
+  
+  // aplicando pesquisa também se tiver texto
+  if (textoPesquisaValue) {
+    tarefasFiltradas = tarefasFiltradas.filter(t => 
+      t.tarefa.toLowerCase().includes(textoPesquisaValue)
+    );
+  }
+  
+  renderizarTarefas(tarefasFiltradas);
+}
+
 function salvarTarefas() {
   localStorage.setItem("tarefas", JSON.stringify(tarefas));
+  // console.log("Tarefas salvas!", tarefas); // debug
 }
 
 function renderizarTarefas(listaParaExibir = tarefas) {
-  container.innerHTML = "";
+  container.innerHTML = ""; // limpa o container antes de renderizar
 
   if (listaParaExibir.length === 0) {
     const mensagemVazia = document.createElement("p");
-    mensagemVazia.textContent =
-      "Nenhuma tarefa encontrada. Adicione uma nova tarefa para começar!";
+    mensagemVazia.textContent = "Nenhuma tarefa encontrada. Adicione uma nova tarefa para começar!";
     mensagemVazia.setAttribute("role", "status");
+    mensagemVazia.classList.add("tarefaVazia");
     container.appendChild(mensagemVazia);
     return;
   }
 
+  // criando um card para cada tarefa
   listaParaExibir.forEach((tarefa, index) => {
     criarCard(tarefa, index);
   });
 
-  container.setAttribute(
-    "aria-label",
-    `${listaParaExibir.length} tarefa${listaParaExibir.length !== 1 ? "s" : ""} encontrada${listaParaExibir.length !== 1 ? "s" : ""}`,
-  );
+  const plural = listaParaExibir.length !== 1 ? "s" : "";
+  container.setAttribute("aria-label", `${listaParaExibir.length} tarefa${plural} encontrada${plural}`);
 }
 
 form.addEventListener("submit", (evento) => {
   evento.preventDefault();
 
   const nomeTarefa = document.getElementById("tarefa").value.trim();
+  const dataEntrega = document.getElementById("dataEntrega").value || null;
 
   if (nomeTarefa) {
     if (nomeTarefa.length > 255) {
@@ -153,49 +212,177 @@ form.addEventListener("submit", (evento) => {
       return;
     }
 
-    const novaTarefa = new Tarefa(nomeTarefa);
+    const novaTarefa = new Tarefa(nomeTarefa, dataEntrega);
     tarefas.push(novaTarefa);
     salvarTarefas();
-    renderizarTarefas();
+    aplicarFiltros();
     form.reset();
     exibirMensagem("Tarefa adicionada com sucesso!");
-    document.getElementById("tarefa").focus();
+    document.getElementById("tarefa").focus(); // volta o foco pro input
   } else {
     exibirMensagem("Por favor, digite uma tarefa válida.");
   }
 });
 
 class Tarefa {
-  constructor(nome) {
+  constructor(nome, dataEntrega = null) {
     this.tarefa = nome;
+    this.dataEntrega = dataEntrega;
+    this.concluida = false;
+    this.id = Date.now() + Math.random(); // id único para cada tarefa
   }
 }
 
+function formatarDataParaDDMM(dataString) {
+  if (!dataString) return null;
+  const data = new Date(dataString);
+  const dia = String(data.getDate()).padStart(2, '0');
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  return `${dia}/${mes}`; // retorna no formato brasileiro
+}
+
+function validarDataDDMM(dataStr) {
+  if (!dataStr || dataStr.length !== 5) return false;
+  const regex = /^\d{2}\/\d{2}$/;
+  if (!regex.test(dataStr)) return false;
+  const partes = dataStr.split('/');
+  const dia = parseInt(partes[0], 10);
+  const mes = parseInt(partes[1], 10);
+  // validando se os valores fazem sentido
+  if (dia < 1 || dia > 31 || mes < 1 || mes > 12) return false;
+  return true;
+}
+
+function converterDDMMParaData(ddmm, anoAtual) {
+  if (!ddmm || ddmm === "xx/xx") return null;
+  const partes = ddmm.split('/');
+  const dia = parseInt(partes[0], 10);
+  const mes = parseInt(partes[1], 10);
+  const data = new Date(anoAtual, mes - 1, dia);
+  return data.toISOString().split('T')[0];
+}
+
 function criarCard(instancia, index) {
-  const card = document.createElement("article");
-  card.classList.add("card");
-  card.setAttribute("role", "listitem");
-
-  const paragrafo = document.createElement("p");
-  paragrafo.innerText = instancia.tarefa;
-
-  const btnExcluir = document.createElement("button");
-  btnExcluir.innerText = "Excluir";
-  btnExcluir.type = "button";
-  btnExcluir.setAttribute("aria-label", `Excluir tarefa: ${instancia.tarefa}`);
+  const template = document.getElementById("templateCard");
+  const card = template.content.cloneNode(true);
+  const article = card.querySelector(".card");
+  
+  const realIndex = tarefas.findIndex(t => t.id === instancia.id);
+  
+  // adicionando classe de concluída se necessário
+  if (instancia.concluida) {
+    article.classList.add("completed");
+  }
+  
+  const titulo = card.querySelector(".tituloCard");
+  if (titulo) titulo.textContent = "Tarefa";
+  
+  const descricao = card.querySelector(".descricaoCard");
+  if (descricao) {
+    descricao.textContent = instancia.tarefa;
+  }
+  
+  const dataCard = card.querySelector(".dataCard");
+  if (dataCard) {
+    if (instancia.dataEntrega) {
+      const dataFormatada = formatarDataParaDDMM(instancia.dataEntrega);
+      dataCard.textContent = dataFormatada;
+      
+      // calculando se está atrasada ou próxima do vencimento
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+      const dataEntrega = new Date(instancia.dataEntrega);
+      dataEntrega.setHours(0, 0, 0, 0);
+      const diffTime = dataEntrega - hoje;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      // só mostra indicador se não estiver concluída
+      if (!instancia.concluida) {
+        const indicador = document.createElement("div");
+        indicador.classList.add("indicadorCard");
+        
+        if (diffDays < 0) {
+          indicador.classList.add("ativo", "vermelho");
+          indicador.setAttribute("title", "Tarefa em atraso");
+        } else if (diffDays === 0 || diffDays === 1) {
+          indicador.classList.add("ativo", "amarelo");
+          indicador.setAttribute("title", diffDays === 0 ? "Vence hoje" : "Vence amanhã");
+        }
+        
+        if (indicador.classList.contains("ativo")) {
+          article.appendChild(indicador);
+        }
+      }
+    } else {
+      dataCard.textContent = "xx/xx";
+    }
+  }
+  
+  const btnEditar = card.querySelector(".btn-editar");
+  btnEditar.classList.add("btnEditar");
+  btnEditar.onclick = () => {
+    // editando o nome primeiro
+    const novaDescricao = prompt("Editar nome da tarefa:", instancia.tarefa);
+    if (novaDescricao === null || novaDescricao.trim() === "") return;
+    
+    if (novaDescricao.length > 255) {
+      exibirMensagem("Tarefa muito longa! Máximo de 255 caracteres.");
+      return;
+    }
+    
+    instancia.tarefa = novaDescricao.trim();
+    
+    // depois editando a data
+    const dataAtualFormatada = instancia.dataEntrega ? formatarDataParaDDMM(instancia.dataEntrega) : "xx/xx";
+    const novaDataStr = prompt("Editar data de entrega (DD/MM ou deixe vazio para remover):", dataAtualFormatada);
+    
+    if (novaDataStr !== null) {
+      if (novaDataStr.trim() === "" || novaDataStr === "xx/xx") {
+        instancia.dataEntrega = null;
+      } else {
+        const dataLimpa = novaDataStr.trim();
+        if (!validarDataDDMM(dataLimpa)) {
+          exibirMensagem("Formato inválido. Use DD/MM (ex: 25/12).");
+          return;
+        }
+        
+        const anoAtual = new Date().getFullYear();
+        const dataConvertida = converterDDMMParaData(dataLimpa, anoAtual);
+        if (!dataConvertida) {
+          exibirMensagem("Data inválida.");
+          return;
+        }
+        instancia.dataEntrega = dataConvertida;
+      }
+    }
+    
+    salvarTarefas();
+    aplicarFiltros();
+    exibirMensagem("Tarefa editada com sucesso!");
+  };
+  
+  const btnConcluir = card.querySelector(".btn-concluir");
+  btnConcluir.classList.add("btnAcao");
+  btnConcluir.onclick = () => {
+    instancia.concluida = !instancia.concluida;
+    salvarTarefas();
+    aplicarFiltros();
+    exibirMensagem(instancia.concluida ? "Tarefa concluída!" : "Tarefa reaberta!");
+  };
+  
+  const btnExcluir = card.querySelector(".btn-excluir");
+  btnExcluir.classList.add("btnAcao");
   btnExcluir.onclick = () => {
     if (
       confirm(`Tem certeza que deseja excluir a tarefa: "${instancia.tarefa}"?`)
     ) {
-      tarefas.splice(index, 1);
+      tarefas.splice(realIndex, 1);
       salvarTarefas();
-      renderizarTarefas();
+      aplicarFiltros();
       exibirMensagem("Tarefa removida com sucesso!");
     }
   };
-
-  card.appendChild(paragrafo);
-  card.appendChild(btnExcluir);
+  
   container.appendChild(card);
 }
 
@@ -203,8 +390,8 @@ function exibirMensagem(texto, tempo = 1000) {
   const msg = document.getElementById("mensagem");
   msg.textContent = texto;
   setTimeout(() => {
-    msg.textContent = "";
+    msg.textContent = ""; // limpa a mensagem depois de um tempo
   }, tempo);
 }
 
-renderizarTarefas();
+aplicarFiltros();
