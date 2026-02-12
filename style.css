@@ -122,21 +122,26 @@ h1 {
   }
 
   .espacadorVazio {
-    display: none;
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   #logoSite {
     position: static;
     z-index: 2;
-    margin: 0;
+    margin: 0 auto;
     background-color: transparent;
     padding: 0;
     border-radius: 0;
     display: flex;
     align-items: center;
+    justify-content: center;
     width: auto;
-    font-size: 20px;
-    flex: 1;
+    font-size: 32px;
+    flex: 0 0 auto;
     transition:
       opacity var(--transition-slow),
       transform var(--transition-slow);
@@ -152,15 +157,37 @@ h1 {
   }
 
   .filtroContainer {
-    display: none;
+    display: none !important;
     gap: 8px;
     align-items: center;
     z-index: 3;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0 !important;
+    overflow: hidden;
+  }
+
+  .btnFiltro {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .filtroContainer.aparecer {
     display: flex !important;
     animation: fadeInScale var(--transition-fast) forwards;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .filtroContainer.aparecer .btnFiltro {
+    animation: fadeInScale var(--transition-fast) forwards;
+    animation-delay: var(--transition-fast);
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .filtroContainer.desaparecer {

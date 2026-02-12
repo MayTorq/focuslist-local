@@ -14,8 +14,8 @@ Gerenciador de tarefas pessoal desenvolvido para o curso **Técnico em Desenvolv
 - [x] Visualiza tarefas salvas.
 - [x] Excluir tarefas.
 - [x] Filtrar por categorias.
-- [ ] Marcar como concluído. (Em breve).
-- [ ] Alerta visual de prioridade (Em breve).
+- [x] Marcar como concluído.
+- [x] Alerta visual de prioridade.
 
 ## 🛠️ Tecnologias
 

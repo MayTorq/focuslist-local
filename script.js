@@ -90,87 +90,111 @@ allCheckboxes.forEach((cb) => {
 
 function aplicarFiltros() {
   // pegando os valores dos checkboxes de filtro
-  const statusConcluido = document.querySelector('input[value="concluido"]')?.checked || false;
-  const statusPendente = document.querySelector('input[value="pendente"]')?.checked || false;
-  const semData = document.querySelector('input[value="sem-data"]')?.checked || false;
-  const atraso = document.querySelector('input[value="atraso"]')?.checked || false;
-  const umDia = document.querySelector('input[value="um-dia"]')?.checked || false;
-  const umMes = document.querySelector('input[value="uma-semana"]')?.checked || false;
-  
+  const statusConcluido =
+    document.querySelector('input[value="concluido"]')?.checked || false;
+  const statusPendente =
+    document.querySelector('input[value="pendente"]')?.checked || false;
+  const semData =
+    document.querySelector('input[value="sem-data"]')?.checked || false;
+  const atraso =
+    document.querySelector('input[value="atraso"]')?.checked || false;
+  const umDia =
+    document.querySelector('input[value="um-dia"]')?.checked || false;
+  const umMes =
+    document.querySelector('input[value="uma-semana"]')?.checked || false;
+
   const temFiltroStatus = statusConcluido || statusPendente;
   const temFiltroData = semData || atraso || umDia || umMes;
-  
+
   let tarefasFiltradas = [...tarefas];
   const textoPesquisaValue = textoPesquisa.value.trim().toLowerCase();
-  
+
   // se não tem filtro selecionado, só aplica pesquisa se tiver
   if (!temFiltroStatus && !temFiltroData) {
     if (textoPesquisaValue) {
-      tarefasFiltradas = tarefasFiltradas.filter(t => 
-        t.tarefa.toLowerCase().includes(textoPesquisaValue)
+      tarefasFiltradas = tarefasFiltradas.filter((t) =>
+        t.tarefa.toLowerCase().includes(textoPesquisaValue),
       );
     }
     renderizarTarefas(tarefasFiltradas);
     return;
   }
-  
+
   // filtrando por status
   if (temFiltroStatus) {
     if (statusConcluido && !statusPendente) {
-      tarefasFiltradas = tarefasFiltradas.filter(t => t.concluida);
+      tarefasFiltradas = tarefasFiltradas.filter((t) => t.concluida);
     } else if (statusPendente && !statusConcluido) {
-      tarefasFiltradas = tarefasFiltradas.filter(t => !t.concluida);
+      tarefasFiltradas = tarefasFiltradas.filter((t) => !t.concluida);
     }
   }
-  
+
   // filtrando por data
   if (temFiltroData) {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
-    
+
     const filtrosDataAtivos = [];
-    if (semData) filtrosDataAtivos.push(t => !t.dataEntrega);
+    if (semData) filtrosDataAtivos.push((t) => !t.dataEntrega);
     if (atraso) {
-      filtrosDataAtivos.push(t => {
+      filtrosDataAtivos.push((t) => {
         if (!t.dataEntrega || t.concluida) return false;
-        const dataEntrega = new Date(t.dataEntrega);
+        // parsear manualmente para evitar problema de timezone
+        const partes = t.dataEntrega.split("-");
+        const ano = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10);
+        const dia = parseInt(partes[2], 10);
+        const dataEntrega = new Date(ano, mes - 1, dia);
         dataEntrega.setHours(0, 0, 0, 0);
         return dataEntrega < hoje;
       });
     }
     if (umDia) {
-      filtrosDataAtivos.push(t => {
+      filtrosDataAtivos.push((t) => {
         if (!t.dataEntrega || t.concluida) return false;
-        const dataEntrega = new Date(t.dataEntrega);
+        // parsear manualmente para evitar problema de timezone
+        const partes = t.dataEntrega.split("-");
+        const ano = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10);
+        const dia = parseInt(partes[2], 10);
+        const dataEntrega = new Date(ano, mes - 1, dia);
         dataEntrega.setHours(0, 0, 0, 0);
         const amanha = new Date(hoje);
         amanha.setDate(amanha.getDate() + 1);
-        return dataEntrega.getTime() === hoje.getTime() || dataEntrega.getTime() === amanha.getTime();
+        return (
+          dataEntrega.getTime() === hoje.getTime() ||
+          dataEntrega.getTime() === amanha.getTime()
+        );
       });
     }
     if (umMes) {
-      filtrosDataAtivos.push(t => {
+      filtrosDataAtivos.push((t) => {
         if (!t.dataEntrega || t.concluida) return false;
-        const dataEntrega = new Date(t.dataEntrega);
+        // parsear manualmente para evitar problema de timezone
+        const partes = t.dataEntrega.split("-");
+        const ano = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10);
+        const dia = parseInt(partes[2], 10);
+        const dataEntrega = new Date(ano, mes - 1, dia);
         dataEntrega.setHours(0, 0, 0, 0);
         const umMesFuturo = new Date(hoje);
         umMesFuturo.setMonth(umMesFuturo.getMonth() + 1);
         return dataEntrega >= hoje && dataEntrega <= umMesFuturo;
       });
     }
-    
-    tarefasFiltradas = tarefasFiltradas.filter(t => 
-      filtrosDataAtivos.some(filtro => filtro(t))
+
+    tarefasFiltradas = tarefasFiltradas.filter((t) =>
+      filtrosDataAtivos.some((filtro) => filtro(t)),
     );
   }
-  
+
   // aplicando pesquisa também se tiver texto
   if (textoPesquisaValue) {
-    tarefasFiltradas = tarefasFiltradas.filter(t => 
-      t.tarefa.toLowerCase().includes(textoPesquisaValue)
+    tarefasFiltradas = tarefasFiltradas.filter((t) =>
+      t.tarefa.toLowerCase().includes(textoPesquisaValue),
     );
   }
-  
+
   renderizarTarefas(tarefasFiltradas);
 }
 
@@ -184,7 +208,8 @@ function renderizarTarefas(listaParaExibir = tarefas) {
 
   if (listaParaExibir.length === 0) {
     const mensagemVazia = document.createElement("p");
-    mensagemVazia.textContent = "Nenhuma tarefa encontrada. Adicione uma nova tarefa para começar!";
+    mensagemVazia.textContent =
+      "Nenhuma tarefa encontrada. Adicione uma nova tarefa para começar!";
     mensagemVazia.setAttribute("role", "status");
     mensagemVazia.classList.add("tarefaVazia");
     container.appendChild(mensagemVazia);
@@ -197,7 +222,10 @@ function renderizarTarefas(listaParaExibir = tarefas) {
   });
 
   const plural = listaParaExibir.length !== 1 ? "s" : "";
-  container.setAttribute("aria-label", `${listaParaExibir.length} tarefa${plural} encontrada${plural}`);
+  container.setAttribute(
+    "aria-label",
+    `${listaParaExibir.length} tarefa${plural} encontrada${plural}`,
+  );
 }
 
 form.addEventListener("submit", (evento) => {
@@ -235,17 +263,19 @@ class Tarefa {
 
 function formatarDataParaDDMM(dataString) {
   if (!dataString) return null;
-  const data = new Date(dataString);
-  const dia = String(data.getDate()).padStart(2, '0');
-  const mes = String(data.getMonth() + 1).padStart(2, '0');
-  return `${dia}/${mes}`; // retorna no formato brasileiro
+  // parsear manualmente para evitar problema de timezone
+  const partes = dataString.split("-");
+  const ano = parseInt(partes[0], 10);
+  const mes = parseInt(partes[1], 10);
+  const dia = parseInt(partes[2], 10);
+  return `${String(dia).padStart(2, "0")}/${String(mes).padStart(2, "0")}`; // retorna no formato brasileiro
 }
 
 function validarDataDDMM(dataStr) {
   if (!dataStr || dataStr.length !== 5) return false;
   const regex = /^\d{2}\/\d{2}$/;
   if (!regex.test(dataStr)) return false;
-  const partes = dataStr.split('/');
+  const partes = dataStr.split("/");
   const dia = parseInt(partes[0], 10);
   const mes = parseInt(partes[1], 10);
   // validando se os valores fazem sentido
@@ -255,60 +285,68 @@ function validarDataDDMM(dataStr) {
 
 function converterDDMMParaData(ddmm, anoAtual) {
   if (!ddmm || ddmm === "xx/xx") return null;
-  const partes = ddmm.split('/');
+  const partes = ddmm.split("/");
   const dia = parseInt(partes[0], 10);
   const mes = parseInt(partes[1], 10);
   const data = new Date(anoAtual, mes - 1, dia);
-  return data.toISOString().split('T')[0];
+  return data.toISOString().split("T")[0];
 }
 
 function criarCard(instancia, index) {
   const template = document.getElementById("templateCard");
   const card = template.content.cloneNode(true);
   const article = card.querySelector(".card");
-  
-  const realIndex = tarefas.findIndex(t => t.id === instancia.id);
-  
+
+  const realIndex = tarefas.findIndex((t) => t.id === instancia.id);
+
   // adicionando classe de concluída se necessário
   if (instancia.concluida) {
     article.classList.add("completed");
   }
-  
+
   const titulo = card.querySelector(".tituloCard");
   if (titulo) titulo.textContent = "Tarefa";
-  
+
   const descricao = card.querySelector(".descricaoCard");
   if (descricao) {
     descricao.textContent = instancia.tarefa;
   }
-  
+
   const dataCard = card.querySelector(".dataCard");
   if (dataCard) {
     if (instancia.dataEntrega) {
       const dataFormatada = formatarDataParaDDMM(instancia.dataEntrega);
       dataCard.textContent = dataFormatada;
-      
+
       // calculando se está atrasada ou próxima do vencimento
       const hoje = new Date();
       hoje.setHours(0, 0, 0, 0);
-      const dataEntrega = new Date(instancia.dataEntrega);
+      // parsear manualmente para evitar problema de timezone
+      const partes = instancia.dataEntrega.split("-");
+      const ano = parseInt(partes[0], 10);
+      const mes = parseInt(partes[1], 10);
+      const dia = parseInt(partes[2], 10);
+      const dataEntrega = new Date(ano, mes - 1, dia);
       dataEntrega.setHours(0, 0, 0, 0);
       const diffTime = dataEntrega - hoje;
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
+
       // só mostra indicador se não estiver concluída
       if (!instancia.concluida) {
         const indicador = document.createElement("div");
         indicador.classList.add("indicadorCard");
-        
+
         if (diffDays < 0) {
           indicador.classList.add("ativo", "vermelho");
           indicador.setAttribute("title", "Tarefa em atraso");
         } else if (diffDays === 0 || diffDays === 1) {
           indicador.classList.add("ativo", "amarelo");
-          indicador.setAttribute("title", diffDays === 0 ? "Vence hoje" : "Vence amanhã");
+          indicador.setAttribute(
+            "title",
+            diffDays === 0 ? "Vence hoje" : "Vence amanhã",
+          );
         }
-        
+
         if (indicador.classList.contains("ativo")) {
           article.appendChild(indicador);
         }
@@ -317,25 +355,30 @@ function criarCard(instancia, index) {
       dataCard.textContent = "xx/xx";
     }
   }
-  
+
   const btnEditar = card.querySelector(".btn-editar");
   btnEditar.classList.add("btnEditar");
   btnEditar.onclick = () => {
     // editando o nome primeiro
     const novaDescricao = prompt("Editar nome da tarefa:", instancia.tarefa);
     if (novaDescricao === null || novaDescricao.trim() === "") return;
-    
+
     if (novaDescricao.length > 255) {
       exibirMensagem("Tarefa muito longa! Máximo de 255 caracteres.");
       return;
     }
-    
+
     instancia.tarefa = novaDescricao.trim();
-    
+
     // depois editando a data
-    const dataAtualFormatada = instancia.dataEntrega ? formatarDataParaDDMM(instancia.dataEntrega) : "xx/xx";
-    const novaDataStr = prompt("Editar data de entrega (DD/MM ou deixe vazio para remover):", dataAtualFormatada);
-    
+    const dataAtualFormatada = instancia.dataEntrega
+      ? formatarDataParaDDMM(instancia.dataEntrega)
+      : "xx/xx";
+    const novaDataStr = prompt(
+      "Editar data de entrega (DD/MM ou deixe vazio para remover):",
+      dataAtualFormatada,
+    );
+
     if (novaDataStr !== null) {
       if (novaDataStr.trim() === "" || novaDataStr === "xx/xx") {
         instancia.dataEntrega = null;
@@ -345,7 +388,7 @@ function criarCard(instancia, index) {
           exibirMensagem("Formato inválido. Use DD/MM (ex: 25/12).");
           return;
         }
-        
+
         const anoAtual = new Date().getFullYear();
         const dataConvertida = converterDDMMParaData(dataLimpa, anoAtual);
         if (!dataConvertida) {
@@ -355,21 +398,23 @@ function criarCard(instancia, index) {
         instancia.dataEntrega = dataConvertida;
       }
     }
-    
+
     salvarTarefas();
     aplicarFiltros();
     exibirMensagem("Tarefa editada com sucesso!");
   };
-  
+
   const btnConcluir = card.querySelector(".btn-concluir");
   btnConcluir.classList.add("btnAcao");
   btnConcluir.onclick = () => {
     instancia.concluida = !instancia.concluida;
     salvarTarefas();
     aplicarFiltros();
-    exibirMensagem(instancia.concluida ? "Tarefa concluída!" : "Tarefa reaberta!");
+    exibirMensagem(
+      instancia.concluida ? "Tarefa concluída!" : "Tarefa reaberta!",
+    );
   };
-  
+
   const btnExcluir = card.querySelector(".btn-excluir");
   btnExcluir.classList.add("btnAcao");
   btnExcluir.onclick = () => {
@@ -382,7 +427,7 @@ function criarCard(instancia, index) {
       exibirMensagem("Tarefa removida com sucesso!");
     }
   };
-  
+
   container.appendChild(card);
 }
 
