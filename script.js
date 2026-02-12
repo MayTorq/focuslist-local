@@ -2,14 +2,77 @@ const form = document.getElementById("formTarefas");
 const container = document.getElementById("listaTarefas");
 const btnFiltro = document.getElementById("btnFiltro");
 const menuFiltro = document.getElementById("menuFiltro");
+const modalEditar = document.getElementById("modalEditar");
+const formModalEditar = document.getElementById("formModalEditar");
+const inputNomeTarefa = document.getElementById("inputNomeTarefa");
+const inputDataTarefa = document.getElementById("inputDataTarefa");
+const btnCancelarModal = document.querySelector(".btnCancelar");
 
-let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
+let tarefas = [];
+let tarefaEmEdicao = null;
+
+try {
+  tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
+} catch (e) {
+  console.error("Erro ao carregar tarefas:", e);
+  exibirMensagem("Erro ao carregar tarefas. Começando do zero.");
+  tarefas = [];
+}
 let textoPesquisa = document.getElementById("textoPesquisa");
 let btnPesquisar = document.getElementById("btnPesquisar");
 let caixaPesquisa = document.getElementById("caixaPesquisa");
 let timeoutId;
 
-// salvando as tarefas no localStorage para não perder quando fechar
+// Modal handlers
+btnCancelarModal.addEventListener("click", () => {
+  modalEditar.close();
+  tarefaEmEdicao = null;
+});
+
+formModalEditar.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  if (!tarefaEmEdicao) return;
+
+  const novaDescricao = inputNomeTarefa.value.trim();
+  const novaDataStr = inputDataTarefa.value.trim();
+
+  if (!novaDescricao) {
+    exibirMensagem("Nome da tarefa não pode estar vazio.");
+    return;
+  }
+
+  if (novaDescricao.length > 255) {
+    exibirMensagem("Tarefa muito longa! Máximo de 255 caracteres.");
+    return;
+  }
+
+  tarefaEmEdicao.tarefa = novaDescricao;
+
+  if (novaDataStr === "" || novaDataStr === "xx/xx") {
+    tarefaEmEdicao.dataEntrega = null;
+  } else {
+    if (!validarDataDDMM(novaDataStr)) {
+      exibirMensagem("Formato inválido. Use DD/MM (ex: 25/12).");
+      return;
+    }
+
+    const anoAtual = new Date().getFullYear();
+    const dataConvertida = converterDDMMParaData(novaDataStr, anoAtual);
+    if (!dataConvertida) {
+      exibirMensagem("Data inválida.");
+      return;
+    }
+    tarefaEmEdicao.dataEntrega = dataConvertida;
+  }
+
+  salvarTarefas();
+  aplicarFiltros();
+  exibirMensagem("Tarefa editada com sucesso!");
+
+  modalEditar.close();
+  tarefaEmEdicao = null;
+});
 
 // debounce na pesquisa para não ficar filtrando a cada letra digitada
 textoPesquisa.addEventListener("input", () => {
@@ -199,8 +262,12 @@ function aplicarFiltros() {
 }
 
 function salvarTarefas() {
-  localStorage.setItem("tarefas", JSON.stringify(tarefas));
-  // console.log("Tarefas salvas!", tarefas); // debug
+  try {
+    localStorage.setItem("tarefas", JSON.stringify(tarefas));
+  } catch (e) {
+    console.error("Erro ao salvar tarefas:", e);
+    exibirMensagem("Erro ao salvar. Tente novamente.");
+  }
 }
 
 function renderizarTarefas(listaParaExibir = tarefas) {
@@ -240,13 +307,18 @@ form.addEventListener("submit", (evento) => {
       return;
     }
 
-    const novaTarefa = new Tarefa(nomeTarefa, dataEntrega);
-    tarefas.push(novaTarefa);
-    salvarTarefas();
-    aplicarFiltros();
-    form.reset();
-    exibirMensagem("Tarefa adicionada com sucesso!");
-    document.getElementById("tarefa").focus(); // volta o foco pro input
+    try {
+      const novaTarefa = new Tarefa(nomeTarefa, dataEntrega);
+      tarefas.push(novaTarefa);
+      salvarTarefas();
+      aplicarFiltros();
+      form.reset();
+      exibirMensagem("Tarefa adicionada com sucesso!");
+      document.getElementById("tarefa").focus();
+    } catch (e) {
+      console.error("Erro ao adicionar tarefa:", e);
+      exibirMensagem("Erro ao adicionar tarefa.");
+    }
   } else {
     exibirMensagem("Por favor, digite uma tarefa válida.");
   }
@@ -359,49 +431,14 @@ function criarCard(instancia, index) {
   const btnEditar = card.querySelector(".btn-editar");
   btnEditar.classList.add("btnEditar");
   btnEditar.onclick = () => {
-    // editando o nome primeiro
-    const novaDescricao = prompt("Editar nome da tarefa:", instancia.tarefa);
-    if (novaDescricao === null || novaDescricao.trim() === "") return;
-
-    if (novaDescricao.length > 255) {
-      exibirMensagem("Tarefa muito longa! Máximo de 255 caracteres.");
-      return;
-    }
-
-    instancia.tarefa = novaDescricao.trim();
-
-    // depois editando a data
-    const dataAtualFormatada = instancia.dataEntrega
+    tarefaEmEdicao = instancia;
+    inputNomeTarefa.value = instancia.tarefa;
+    inputDataTarefa.value = instancia.dataEntrega
       ? formatarDataParaDDMM(instancia.dataEntrega)
-      : "xx/xx";
-    const novaDataStr = prompt(
-      "Editar data de entrega (DD/MM ou deixe vazio para remover):",
-      dataAtualFormatada,
-    );
+      : "";
 
-    if (novaDataStr !== null) {
-      if (novaDataStr.trim() === "" || novaDataStr === "xx/xx") {
-        instancia.dataEntrega = null;
-      } else {
-        const dataLimpa = novaDataStr.trim();
-        if (!validarDataDDMM(dataLimpa)) {
-          exibirMensagem("Formato inválido. Use DD/MM (ex: 25/12).");
-          return;
-        }
-
-        const anoAtual = new Date().getFullYear();
-        const dataConvertida = converterDDMMParaData(dataLimpa, anoAtual);
-        if (!dataConvertida) {
-          exibirMensagem("Data inválida.");
-          return;
-        }
-        instancia.dataEntrega = dataConvertida;
-      }
-    }
-
-    salvarTarefas();
-    aplicarFiltros();
-    exibirMensagem("Tarefa editada com sucesso!");
+    modalEditar.showModal();
+    inputNomeTarefa.focus();
   };
 
   const btnConcluir = card.querySelector(".btn-concluir");
@@ -421,10 +458,15 @@ function criarCard(instancia, index) {
     if (
       confirm(`Tem certeza que deseja excluir a tarefa: "${instancia.tarefa}"?`)
     ) {
-      tarefas.splice(realIndex, 1);
-      salvarTarefas();
-      aplicarFiltros();
-      exibirMensagem("Tarefa removida com sucesso!");
+      try {
+        tarefas.splice(realIndex, 1);
+        salvarTarefas();
+        aplicarFiltros();
+        exibirMensagem("Tarefa removida com sucesso!");
+      } catch (e) {
+        console.error("Erro ao excluir tarefa:", e);
+        exibirMensagem("Erro ao excluir tarefa.");
+      }
     }
   };
 

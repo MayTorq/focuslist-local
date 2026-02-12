@@ -519,7 +519,8 @@ button:hover {
   background-color: #dee2e6;
 }
 
-button:focus {
+button:focus,
+button:focus-visible {
   outline: var(--focus-outline);
   outline-offset: var(--focus-offset);
 }
@@ -619,6 +620,12 @@ main {
   padding: 0;
 }
 
+.btnEditar:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
 .descricaoCard {
   flex: 1;
   display: flex;
@@ -715,6 +722,123 @@ main {
   .grupoFormulario {
     flex-direction: row;
     justify-content: center;
+
+    /* Modal de edição */
+    .modalEditar {
+      border: none;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      padding: 0;
+      max-width: 90%;
+      width: 400px;
+    }
+
+    .modalEditar::backdrop {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modalConteudo {
+      padding: 30px;
+      background-color: var(--color-white);
+      border-radius: var(--radius-md);
+    }
+
+    .modalConteudo h2 {
+      margin: 0 0 20px 0;
+      color: var(--color-text-dark);
+      font-size: 1.5rem;
+    }
+
+    .modalConteudo label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      color: var(--color-text-dark);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .modalConteudo input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .modalConteudo input:focus-visible {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(79, 93, 117, 0.1);
+    }
+
+    .modalBotoes {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 25px;
+    }
+
+    .btnSalvar {
+      background-color: var(--color-primary);
+      color: var(--color-header-text);
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color var(--transition-fast);
+    }
+
+    .btnSalvar:hover {
+      background-color: #3d4563;
+    }
+
+    .btnSalvar:focus-visible {
+      outline: var(--focus-outline);
+      outline-offset: 2px;
+    }
+
+    .btnCancelar {
+      background-color: #e9ecef;
+      color: var(--color-text-dark);
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color var(--transition-fast);
+    }
+
+    .btnCancelar:hover {
+      background-color: #dee2e6;
+    }
+
+    .btnCancelar:focus-visible {
+      outline: var(--focus-outline);
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 600px) {
+      .modalEditar {
+        width: 90%;
+        max-width: 100%;
+      }
+
+      .modalConteudo {
+        padding: 20px;
+      }
+
+      .modalBotoes {
+        flex-direction: column;
+      }
+
+      .btnSalvar,
+      .btnCancelar {
+        width: 100%;
+      }
+    }
   }
 
   .grupoFormulario input {

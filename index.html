@@ -20,7 +20,7 @@
                 <img class="iconeFiltro" src="icon-filter.png" alt="Ícone de filtro">
             </button>
 
-            <nav id="menuFiltro" class="menuFiltro" role="menu" aria-label="Menu de filtros de tarefas">
+            <div id="menuFiltro" class="menuFiltro" role="group" aria-label="Filtros de tarefas">
                 <div class="secaoFiltro">
                     <span class="tituloFiltro">Estado da Tarefa</span>
                     <label class="itemFiltro">
@@ -88,7 +88,7 @@
                         <span class="textoItem">A ser entregue em um mês</span>
                     </label>
                 </div>
-            </nav>
+            </div>
         </div>
 
         <div class="caixaPesquisa" id="caixaPesquisa" role="search">
@@ -161,6 +161,26 @@
             <div class="containerTarefas" id="listaTarefas" aria-label="Lista de tarefas"></div>
         </section>
     </main>
+
+    <!-- Modal para editar tarefa -->
+    <dialog id="modalEditar" class="modalEditar" aria-labelledby="modalTitulo">
+        <form id="formModalEditar">
+            <div class="modalConteudo">
+                <h2 id="modalTitulo">Editar Tarefa</h2>
+
+                <label for="inputNomeTarefa">Nome da tarefa:</label>
+                <input type="text" id="inputNomeTarefa" required>
+
+                <label for="inputDataTarefa">Data de entrega (DD/MM):</label>
+                <input type="text" id="inputDataTarefa" placeholder="DD/MM ou deixe vazio">
+
+                <div class="modalBotoes">
+                    <button type="submit" class="btnSalvar">Salvar</button>
+                    <button type="button" class="btnCancelar" aria-label="Cancelar edição">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
 
     <script src="script.js"></script>
 </body>
