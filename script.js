@@ -402,27 +402,6 @@ function criarCard(instancia, index) {
       dataEntrega.setHours(0, 0, 0, 0);
       const diffTime = dataEntrega - hoje;
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      // só mostra indicador se não estiver concluída
-      if (!instancia.concluida) {
-        const indicador = document.createElement("div");
-        indicador.classList.add("indicadorCard");
-
-        if (diffDays < 0) {
-          indicador.classList.add("ativo", "vermelho");
-          indicador.setAttribute("title", "Tarefa em atraso");
-        } else if (diffDays === 0 || diffDays === 1) {
-          indicador.classList.add("ativo", "amarelo");
-          indicador.setAttribute(
-            "title",
-            diffDays === 0 ? "Vence hoje" : "Vence amanhã",
-          );
-        }
-
-        if (indicador.classList.contains("ativo")) {
-          article.appendChild(indicador);
-        }
-      }
     } else {
       dataCard.textContent = "xx/xx";
     }

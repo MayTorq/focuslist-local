@@ -576,29 +576,6 @@ main {
   transition: transform var(--transition-fast);
 }
 
-.indicadorCard {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  width: 20px;
-  height: 20px;
-  border-radius: var(--radius-full);
-  display: none;
-  z-index: 10;
-}
-
-.indicadorCard.ativo {
-  display: block;
-}
-
-.indicadorCard.amarelo {
-  background-color: var(--color-yellow);
-}
-
-.indicadorCard.vermelho {
-  background-color: var(--color-red);
-}
-
 .tituloCard {
   position: absolute;
   top: 15px;
