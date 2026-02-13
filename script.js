@@ -283,8 +283,21 @@ function renderizarTarefas(listaParaExibir = tarefas) {
     return;
   }
 
+  // ordenando tarefas por data de entrega (mais próximas primeiro)
+  const tarefasOrdenadas = [...listaParaExibir].sort((a, b) => {
+    // se ambas não têm data, mantém a ordem original
+    if (!a.dataEntrega && !b.dataEntrega) return 0;
+
+    // tarefas sem data vão para o final
+    if (!a.dataEntrega) return 1;
+    if (!b.dataEntrega) return -1;
+
+    // comparando as datas
+    return new Date(a.dataEntrega) - new Date(b.dataEntrega);
+  });
+
   // criando um card para cada tarefa
-  listaParaExibir.forEach((tarefa, index) => {
+  tarefasOrdenadas.forEach((tarefa, index) => {
     criarCard(tarefa, index);
   });
 
